@@ -10,6 +10,8 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from datetime import datetime
+from uuid import uuid4
 
 
 class HBNBCommand(cmd.Cmd):
@@ -73,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -134,27 +136,34 @@ class HBNBCommand(cmd.Cmd):
                 continue
 
             key, value = key_value
-            if not (value.startswith('"') and value.endswith('"')):
-                continue
+            # if not (value.startswith('"') and value.endswith('"')):
+            #     continue
 
-            value = value[1:-1].replace('_', ' ').replace('\\"', '"')
-            if '.' in value:
-                try:
-                    value = float(value)
-                except ValueError:
-                    continue
-            else:
-                try:
-                    value = int(value)
-                except ValueError:
-                    continue
-
+            # value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+            value = value.replace('_', ' ').replace('\"', ' ')
+            if key in HBNBCommand.types:
+                value = HBNBCommand.types[key](value)
             kwargs[key] = value
+            # if '.' in value:
+            #     try:
+            #         value = float(value)
+            #     except ValueError:
+            #         continue
+            # else:
+            #     try:
+            #         value = int(value)
+            #     except ValueError:
+            #         continue
 
-        # Create an instance of the specified class with the provided parameters
-
-        new_instance = HBNBCommand.classes[class_name]()
-        storage.save()
+            # kwargs[key] = value
+        # Create an instance of the specified class with the provided parameter
+        kwargs['updated_at'] = datetime.now().isoformat()
+        kwargs['created_at'] = datetime.now().isoformat()
+        kwargs['id'] = str(uuid4())
+        kwargs['__class__'] = class_name
+        
+        new_instance = HBNBCommand.classes[class_name](**kwargs)
+        new_instance.save()
         print(new_instance.id)
         storage.save()
 
@@ -305,7 +314,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '\"':  # check for quoted arg
+            if args and args[0] == '\"':  # check for quoted arg
                 second_quote = args.find('\"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
@@ -313,10 +322,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(' ')
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not ' ':
+            if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '\"':
+            if args[2] and args[2][0] == '\"':
                 att_val = args[2][1:args[2].find('\"', 1)]
 
             # if att_val was not quoted arg
