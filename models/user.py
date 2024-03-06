@@ -6,7 +6,7 @@ from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import getenv
-from models.place import Place 
+from models.place import Place  # import place conditionally
 from models.review import Review
 
 storage_type = getenv("HBNB_TYPE_STORAGE")
