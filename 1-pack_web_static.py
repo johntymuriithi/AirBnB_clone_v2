@@ -20,3 +20,4 @@ def do_pack():
     if local("tar -cvzf {} web_static".format(file)).failed is True:
         return None
     return file
+
