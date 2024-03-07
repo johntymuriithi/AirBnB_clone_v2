@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Bash script that sets up web servers for the deployment of web static
 
 # Install Nginx if not already installed
