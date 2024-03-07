@@ -1,29 +1,21 @@
 #!/usr/bin/env bash
-# Bash script that sets up web servers for the deployment of web static
+# a Bash script that sets up your web servers for the deployment of web_static
 
 # Install Nginx if not already installed
-sudo apt-get -y update
+sudo apt-get update
 sudo apt-get -y install nginx
 
-# Create necessary folders if they don't exist
-sudo mkdir -p /data/web_static/releases/test/
-sudo mkdir -p /data/web_static/shared/
+# Create necessary folders
+sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
 
-# Create a fake HTML file
-sudo echo "<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>" | sudo tee /data/web_static/releases/test/index.html
+# Create fake HTML file
+echo "<html><head></head><body>Holberton School</body></html>" | sudo tee /data/web_static/releases/test/index.html
 
-# Create or recreate symbolic link
+# Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Give ownership of /data/ to the ubuntu user and group
+# Set ownership
 sudo chown -R ubuntu:ubuntu /data/
-
 # Update Nginx configuration
 config_content="
 server {
