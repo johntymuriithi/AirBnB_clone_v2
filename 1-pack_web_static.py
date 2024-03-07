@@ -1,13 +1,9 @@
 #!/usr/bin/python3
+#Fabric Module to generate .tgz archive from contents of specific folder.
 
-""" Fabric Module to generate .tgz archive from contents of specific folder.
-"""
-
-from fabric import task
 from fabric.operations import local
 from datetime import datetime
 
-@task
 def do_pack():
     """Generates a .tgz archive from the contents of the web_static folder."""
     # Create the versions folder if it doesn't exist
