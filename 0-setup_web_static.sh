@@ -16,28 +16,12 @@ sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # Set ownership
 sudo chown -R ubuntu:ubuntu /data/
+
 # Update Nginx configuration
-config_content="
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+sudo sed -i 's|^.*server_name.*$|&\n\n\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t}\n|' /etc/nginx/sites-available/default
 
-    server_name _;
-
-    location / {
-        add_header X-Served-By $hostname;
-        proxy_pass http://127.0.0.1:5000;
-    }
-
-    location /hbnb_static {
-        alias /data/web_static/current;
-        index index.html index.htm;
-    }
-    $config_content
-}"
-
-# Add the configuration to Nginx default site
-sudo echo "$config_content" | sudo tee /etc/nginx/sites-available/default
 
 # Restart Nginx
 sudo service nginx restart
+
+exit 0
