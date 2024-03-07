@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 #Fabric Module to generate .tgz archive from contents of specific folder.
-
-
 from fabric.operations import local
 from datetime import datetime
 
